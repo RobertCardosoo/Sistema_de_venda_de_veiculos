@@ -12,3 +12,16 @@ class Pessoa:
     def getNome(self):
         return self.nome
 
+    def getIdade(self):
+        return self.idade
+    
+    def setIdade(self,n):
+        self.idade = n
+    
+    def setAltura(self,a):
+        self.altura = a
+    
+    def getAltura(self):
+        return self.altura
+    
+    
