@@ -33,5 +33,5 @@ while c < len(pessoas):
     print("Altura: "+str(pessoas[int(c)].getAltura()))
     c+=1
 
-
+print("teste")
 
