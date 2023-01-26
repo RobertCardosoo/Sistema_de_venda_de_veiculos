@@ -1,9 +1,13 @@
 class Pessoa:
     
-    def __init__(self,nome:str,idade:int,altura:float):
+    def __init__(self,nome:str,idade:int,cpf:str,sexo:str): #Construtor
+        
         self.nome = nome
         self.idade = idade
-        self.altura = altura
+        self.cpf = cpf
+        self.sexo = sexo
+    
+        
         
     
     def setNome(self,n):
@@ -18,10 +22,16 @@ class Pessoa:
     def setIdade(self,n):
         self.idade = n
     
-    def setAltura(self,a):
-        self.altura = a
+    def setCPF(self,c):
+        self.cpf = c
     
-    def getAltura(self):
-        return self.altura
+    def getCPF(self):
+        return self.cpf
+    
+    def getSexo(self):
+        return self.sexo
+    
+    def setSexo(self,s):
+        self.sexo = s
     
     
