@@ -4,5 +4,4 @@ from classes.Carro import Carro
 from classes.Consultor import Consultor
 
 
-
-
+print(teste)
