@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import ttk
+from tkcalendar import Calendar
 
 
 
@@ -71,16 +73,53 @@ class App:
         self.lb_codigo = Label(self.frame_1,text="Código:",bg='#3E3E3E',foreground='white')
         self.lb_codigo.place(relx=0.01, rely=0.05)
         
-        self.codigp_input = Entry(self.frame_1)
-        self.codigp_input.place(relx=0.01, rely=0.15,relwidth=0.08,relheight=0.09)
+        self.codigo_input = Entry(self.frame_1)
+        self.codigo_input.place(relx=0.01, rely=0.15,relwidth=0.08,relheight=0.09)
         
         #Criando label e input do Nome
         
-        self.lb_codigo = Label(self.frame_1,text="Nome:",bg='#3E3E3E',foreground='white')
-        self.lb_codigo.place(relx=0.05, rely=0.35)
+        self.lb_nome = Label(self.frame_1,text="Nome:",bg='#3E3E3E',foreground='white')
+        self.lb_nome.place(relx=0.01, rely=0.35)
         
-        self.codigp_input = Entry(self.frame_1)
-        self.codigp_input.place(relx=0.05, rely=0.45,relwidth=0.7,relheight=0.09)
+        self.nome_input = Entry(self.frame_1)
+        self.nome_input.place(relx=0.01, rely=0.45,relwidth=0.5,relheight=0.09)
+        
+        #Criando label e input do cpf
+        
+        self.lb_cpf = Label(self.frame_1,text="C.P.F:",bg='#3E3E3E',foreground='white')
+        self.lb_cpf.place(relx=0.53, rely=0.35)
+        
+        self.cpf_input = Entry(self.frame_1)
+        self.cpf_input.place(relx=0.53, rely=0.45,relwidth=0.2,relheight=0.09)
+        
+        #Criando input para sexo
+        self.lb_sexo = Label(self.frame_1,text="Sexo:",bg='#3E3E3E',foreground='white')
+        self.lb_sexo.place(relx=0.34, rely=0)
+        
+        self.sx = ["Masculino","Feminino"]
+        self.cb = ttk.Combobox(self.frame_1,values=self.sx,state="readonly")
+        self.cb.place(x=63,y=1,relwidth=0.6)
+        self.cb.set("Masculino")
+        self.cb.pack()
+        
+        #Criando datepicker
+        
+        def escolhedata():
+            self.tela_escolhe_data = Tk()
+            self.tela_escolhe_data.title("Escolha a data do seu nascimento")
+            self.tela_escolhe_data.geometry("210x250")
+            self.dt = Calendar(self.tela_escolhe_data,selectmode='day')
+            self.btset_date = Button(self.tela_escolhe_data,text="Data de Nascimento")
+            self.btset_date.place(rely=1,relx=5)
+            self.dt.pack()
+            
+            
+            
+        self.date_picker = Button(self.frame_1,text="Data de Nascimento",command=escolhedata)
+        self.date_picker.place(relx = 0.75,rely=0.45,relwidth=0.17,relheight=0.1)
+        
+        
+        
         
         
         
