@@ -8,5 +8,5 @@ from classes.Application import App
 
 newapp = App()
 
-newapp.Cadastro()
+newapp.Iniciar()
 

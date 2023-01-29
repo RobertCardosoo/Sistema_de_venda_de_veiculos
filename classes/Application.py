@@ -20,8 +20,19 @@ class App:
         
     def Iniciar(self):
         #Configurando a  tela da home e chamando a função frames
+        
         self.root.title("System Car")
         self.frames_home()
+        
+        #Criando menu
+        
+        self.menu = Menu(self.root,bg='#3E3E3E')
+        self.root.config(menu=self.menu)
+        
+        self.fileMenu = Menu(self.menu)
+        self.menu.add_cascade(label="Usuários",menu=self.fileMenu)
+        self.fileMenu.add_command(label="Cadastro", command=self.Cadastro)
+        
         self.root.mainloop()
         
     def Cadastro(self):
@@ -43,6 +54,8 @@ class App:
         self.frame_2.place(relx = 0.02 , rely = 0.5,relwidth = 0.96, relheight = 0.46)
         
     def frames_home(self):
+        
+           
         self.frame_1 = Frame(self.root,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
         self.frame_1.place(relx = 0.02 , rely = 0.02,relwidth = 0.6, relheight = 0.95)
@@ -50,6 +63,9 @@ class App:
         self.frame_2 = Frame(self.root,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
         self.frame_2.place(relx = 0.68 , rely = 0.02,relwidth = 0.3, relheight = 0.65)
+        
+        
+    #Elementos do primeiro frame
         
     def widgets_frame1(self):
         #Criando botão limpar    
