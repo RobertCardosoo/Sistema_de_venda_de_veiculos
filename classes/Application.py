@@ -31,8 +31,10 @@ class App:
         self.root.config(menu=self.menu)
         
         self.fileMenu = Menu(self.menu)
-        self.menu.add_cascade(label="Usuários",menu=self.fileMenu)
-        self.fileMenu.add_command(label="Cadastro", command=self.Cadastro)
+        self.menu.add_command(label="Home", command=self.home)
+        self.menu.add_cascade(label="Cadastro",menu=self.fileMenu)
+        self.fileMenu.add_command(label="Usuários", command=self.Cadastro)
+        self.widgets_frame1_home()
         
         
         self.root.mainloop()
@@ -41,8 +43,8 @@ class App:
         #Configurando a tela de  cadastro e chamando a função frames
         self.root.title("Cadastro")
         self.frames_cadastro()
-        self.widgets_frame1()
-        self.fechar()
+        self.widgets_frame1_cadastro()
+        self.fechar_home()
         self.root.mainloop()
         
         
@@ -69,14 +71,19 @@ class App:
         self.frame_2.place(relx = 0.68 , rely = 0.02,relwidth = 0.3, relheight = 0.65)
         
         
-    def fechar(self):
+        
+    def fechar_home(self):
         self.frame_1.destroy()
         self.frame_2.destroy()
+    def home(self):
+        self.frame_11.destroy()
+        self.frame_22.destroy()
+        self.Iniciar()
         
         
-    #Elementos do primeiro frame
+    #Elementos do primeiro frame Cadastro
         
-    def widgets_frame1(self):
+    def widgets_frame1_cadastro(self):
         #Criando botão limpar    
         self.btlimpar = Button(self.frame_11,text="Limpar")
         self.btlimpar.place(relx = 0.2,rely=0.15,relwidth=0.1,relheight=0.1)
@@ -136,14 +143,18 @@ class App:
             self.dt = Calendar(self.tela_escolhe_data,selectmode='day')
             self.btset_date = Button(self.tela_escolhe_data,text="Data de Nascimento")
             self.btset_date.place(rely=1,relx=5)
-            self.dt.pack()
-            
-            
-            
+            self.dt.pack()      
         self.date_picker = Button(self.frame_11,text="Data de Nascimento",command=escolhedata)
         self.date_picker.place(relx = 0.75,rely=0.45,relwidth=0.17,relheight=0.1)
         
+    def widgets_frame1_home(self):
         
+        self.tabela = Listbox(self.frame_1)    
+        self.tabela.configure(width=1024,height=768)
+        self.tabela.insert(1,"Python")
+        self.tabela.insert(2,"Python2")
+        self.tabela.config(background="#3E3E3E",border=0,foreground="white")
+        self.tabela.pack()
         
         
         
