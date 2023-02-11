@@ -1,10 +1,77 @@
 from tkinter import *
 from tkinter import ttk
-from tkcalendar import Calendar
+from tkinter import messagebox
+#from tkcalendar import Calendar
+import mysql.connector
 
 
-
-class App:
+class Funcs():
+    def monta_tabela(self):
+        self.conecta_bd
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(11) not null, data_nascimento date, genero varchar(10) not null);')
+        self.conn.commit()
+        self.desconectar
+        
+    def checkCPF(self,cpf):
+        
+            self.conecta_bd()
+            cpfc = cpf
+            self.cursor.execute(f'select cpf from consultores where cpf="{cpfc}"')
+            res = self.cursor.fetchall()
+            self.desconectar()
+            return len(res)
+        
+    def limpa_tela(self):
+        
+        self.codigo_input.delete(0,END)
+        self.nome_input.delete(0,END)
+        self.cpf_input.delete(0,END)
+    
+    def conecta_bd(self):
+        
+        self.conn = mysql.connector.connect(host="localhost",user="root",password="root",database="sys_v_veiculos")
+        self.cursor = self.conn.cursor(); print("Conectando ao Banco de Dados")
+        self.monta_tabela()  
+        
+    def desconectar(self):
+        
+        self.conn.close(); print("Desconectando ao Banco de Dados")    
+         
+    def criar_usuario(self):
+        nomec = self.nome_input.get()
+        cpfc = self.cpf_input.get()
+        gen = self.cb.get()
+        check = self.checkCPF(cpfc)
+        
+        if(nomec == "" or cpfc =="" or gen==""):
+            
+            messagebox.showwarning(title="Opa!", message="Não é possível criar usuário com campos vazios")
+            
+        elif(check > 0 ):
+            
+            messagebox.showwarning(title="Opa!", message="CPF já cadastrado")
+            
+        elif(check == 0 and cpfc!=""):
+            
+            self.conecta_bd()
+            
+            self.cursor.execute(f'INSERT INTO consultores (nome,cpf,genero) VALUES ("{nomec}","{cpfc}","{gen}")')
+            self.conn.commit()
+            self.desconectar()
+            self.limpa_tela()
+            messagebox.showinfo(title="Novo Consultor na área!", message="Consultor Criado com Sucesso!")    
+            self.select_lista()
+            
+    def select_lista(self):
+        self.lista_usu.delete(*self.lista_usu.get_children())
+        self.conecta_bd()
+        self.cursor.execute('SELECT id,nome,cpf,data_nascimento,genero FROM consultores ORDER BY id ASC;')
+        lista = self.cursor.fetchall()
+        for i in lista:
+            self.lista_usu.insert("","end",values=i)
+        self.desconectar()
+        
+class App(Funcs):
     
     
     def __init__(self):
@@ -14,11 +81,9 @@ class App:
         self.root.resizable(True,True)
         self.root.minsize(width=600,height=600)
         
+        #self.select_lista()
         
-        
-        
-        
-        
+              
     def Iniciar(self):
         #Configurando a  tela da home e chamando a função frames
         
@@ -42,9 +107,11 @@ class App:
     def Cadastro(self):
         #Configurando a tela de  cadastro e chamando a função frames
         self.root.title("Cadastro")
+        self.fechar_home()
         self.frames_cadastro()
         self.widgets_frame1_cadastro()
-        self.fechar_home()
+        self.widgets_frame2_cadastro()
+        self.select_lista()
         self.root.mainloop()
         
         
@@ -85,20 +152,20 @@ class App:
         
     def widgets_frame1_cadastro(self):
         #Criando botão limpar    
-        self.btlimpar = Button(self.frame_11,text="Limpar")
+        self.btlimpar = Button(self.frame_11,text="Limpar",command=self.limpa_tela)
         self.btlimpar.place(relx = 0.2,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Buscar  
-        self.btlimpar = Button(self.frame_11,text="Buscar")
-        self.btlimpar.place(relx = 0.31,rely=0.15,relwidth=0.1,relheight=0.1)
+        self.btbuscar = Button(self.frame_11,text="Buscar")
+        self.btbuscar.place(relx = 0.31,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Novo
-        self.btlimpar = Button(self.frame_11,text="Novo")
-        self.btlimpar.place(relx = 0.62,rely=0.15,relwidth=0.1,relheight=0.1)
+        self.btnovo = Button(self.frame_11,text="Novo",command=self.criar_usuario)
+        self.btnovo.place(relx = 0.62,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Alterar
-        self.btlimpar = Button(self.frame_11,text="Alterar")
-        self.btlimpar.place(relx = 0.73,rely=0.15,relwidth=0.1,relheight=0.1)
+        self.btalterar = Button(self.frame_11,text="Alterar")
+        self.btalterar.place(relx = 0.73,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Apagar
-        self.btlimpar = Button(self.frame_11,text="Novo")
-        self.btlimpar.place(relx = 0.84,rely=0.15,relwidth=0.1,relheight=0.1)
+        self.btexcluir = Button(self.frame_11,text="Excluir")
+        self.btexcluir.place(relx = 0.84,rely=0.15,relwidth=0.1,relheight=0.1)
         
         #Criando label e input do codigo
         
@@ -128,24 +195,38 @@ class App:
         self.lb_sexo = Label(self.frame_11,text="Sexo:",bg='#3E3E3E',foreground='white')
         self.lb_sexo.place(relx=0.34, rely=0)
         
-        self.sx = ["Masculino","Feminino"]
+        self.sx = ["Masculino","Feminino","Outro"]
         self.cb = ttk.Combobox(self.frame_11,values=self.sx,state="readonly")
         self.cb.place(x=63,y=1,relwidth=0.6)
         self.cb.set("Masculino")
         self.cb.pack()
         
         #Criando datepicker
+    
         
-        def escolhedata():
-            self.tela_escolhe_data = Tk()
-            self.tela_escolhe_data.title("Escolha a data do seu nascimento")
-            self.tela_escolhe_data.geometry("210x250")
-            self.dt = Calendar(self.tela_escolhe_data,selectmode='day')
-            self.btset_date = Button(self.tela_escolhe_data,text="Data de Nascimento")
-            self.btset_date.place(rely=1,relx=5)
-            self.dt.pack()      
-        self.date_picker = Button(self.frame_11,text="Data de Nascimento",command=escolhedata)
-        self.date_picker.place(relx = 0.75,rely=0.45,relwidth=0.17,relheight=0.1)
+    
+    def widgets_frame2_cadastro(self):
+        #Criando Lista de Usuários
+        self.lista_usu = ttk.Treeview(self.frame_22, height = 3,columns=('col1','col2','col3','col4','col5'))
+
+        self.lista_usu.heading("#1",text="Código")
+        self.lista_usu.heading("#2",text="Nome")
+        self.lista_usu.heading("#3",text="CPF")
+        self.lista_usu.heading("#4",text="Idade")
+        self.lista_usu.heading("#5",text="Gênero")
+        
+        self.lista_usu.column("#0",width=0)
+        self.lista_usu.column("#1",width=50)
+        self.lista_usu.column("#2",width=200)
+        self.lista_usu.column("#3",width=125)
+        self.lista_usu.column("#4",width=125)
+        self.lista_usu.column("#5",width=125)
+        
+        self.lista_usu.place(relx=0.01,rely=0.01,relwidth=0.95,relheight=0.99)
+        self.scroll_Lista = Scrollbar(self.frame_22, orient='vertical')
+        self.lista_usu.configure(yscroll=self.scroll_Lista.set)
+        self.scroll_Lista.place(relx=0.96,rely=0.01,relwidth=0.02, relheight=0.99)
+        
         
     def widgets_frame1_home(self):
         
@@ -155,7 +236,7 @@ class App:
         self.tabela.insert(2,"Python2")
         self.tabela.config(background="#3E3E3E",border=0,foreground="white")
         self.tabela.pack()
-        
+    
         
         
         
