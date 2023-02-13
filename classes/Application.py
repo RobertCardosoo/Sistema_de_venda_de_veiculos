@@ -6,9 +6,11 @@ import mysql.connector
 
 
 class Funcs():
+#Funções de Banco de Dados
+
     def monta_tabela(self):
         self.conecta_bd
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(11) not null, data_nascimento date, genero varchar(10) not null);')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(14) not null, data_nascimento date, genero varchar(10) not null);')
         self.conn.commit()
         self.desconectar
         
@@ -70,7 +72,25 @@ class Funcs():
         for i in lista:
             self.lista_usu.insert("","end",values=i)
         self.desconectar()
+    
+    #formatação e validação de CPF 
+    
+    def format_cpf(self,event = None):
+    
+        text = self.cpf_input.get().replace(".", "").replace("-", "")[:11]
+        new_text = ""
+
+        if event.keysym.lower() == "backspace": return
         
+        for index in range(len(text)):
+            
+            if not text[index] in "0123456789": continue
+            if index in [2, 5]: new_text += text[index] + "."
+            elif index == 8: new_text += text[index] + "-"
+            else: new_text += text[index]
+
+        self.cpf_input.delete(0, "end")
+        self.cpf_input.insert(0, new_text)
 class App(Funcs):
     
     
@@ -190,6 +210,7 @@ class App(Funcs):
         
         self.cpf_input = Entry(self.frame_11)
         self.cpf_input.place(relx=0.53, rely=0.45,relwidth=0.2,relheight=0.09)
+        self.cpf_input.bind("<KeyRelease>",self.format_cpf)
         
         #Criando input para sexo
         self.lb_sexo = Label(self.frame_11,text="Sexo:",bg='#3E3E3E',foreground='white')
