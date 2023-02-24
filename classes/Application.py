@@ -102,7 +102,7 @@ class App(Funcs):
         self.root.minsize(width=600,height=600)
         
         
-        
+    #tela de inicial de login    
     def Login(self):
         self.tela_login = Tk()
         self.tela_login.title("Login")
@@ -113,15 +113,16 @@ class App(Funcs):
         self.frames_login()
         self.root.destroy()
         self.tela_login.mainloop()
-                  
+        
+    #Tela Home             
     def Iniciar(self):
-        #Configurando a  tela da home e chamando a função frames
+        
         
         self.root.title("System Car")
         self.frames_home()
         
-        #Criando menu
         
+        #Menu da Home
         self.menu = Menu(self.root,bg='#3E3E3E')
         self.root.config(menu=self.menu)
         
@@ -135,7 +136,7 @@ class App(Funcs):
         self.root.mainloop()
         
     def Cadastro(self):
-        #Configurando a tela de  cadastro e chamando a função frames
+        #Tela de Cadastro de Consultores
         self.root.title("Cadastro")
         self.fechar_home()
         self.frames_cadastro()
@@ -145,7 +146,7 @@ class App(Funcs):
         self.root.mainloop()
         
         
-        
+    #Frames da Tela de Cadastro    
     def frames_cadastro(self):
         self.frame_11= Frame(self.root,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
@@ -154,11 +155,13 @@ class App(Funcs):
         self.frame_22 = Frame(self.root,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
         self.frame_22.place(relx = 0.02 , rely = 0.5,relwidth = 0.96, relheight = 0.46)
-        
+    #Frames da tela de login    
     def frames_login(self):
         self.frame_l = Frame(self.tela_login,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
         self.frame_l.place(relx = 0.39 , rely = 0.02,relwidth = 0.6, relheight = 0.95)
+        
+    #Frames da tela home
     def frames_home(self):
         
         self.frame_1 = Frame(self.root,bd=4,bg='#3E3E3E',
@@ -170,10 +173,11 @@ class App(Funcs):
         self.frame_2.place(relx = 0.68 , rely = 0.02,relwidth = 0.3, relheight = 0.65)
         
         
-        
+    #Função que fecha os frames da home    
     def fechar_home(self):
         self.frame_1.destroy()
         self.frame_2.destroy()
+    #Função que fecha a tela de Cadastro
     def home(self):
         self.frame_11.destroy()
         self.frame_22.destroy()
