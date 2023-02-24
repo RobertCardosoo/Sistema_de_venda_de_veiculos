@@ -101,9 +101,19 @@ class App(Funcs):
         self.root.resizable(True,True)
         self.root.minsize(width=600,height=600)
         
-        #self.select_lista()
         
-              
+        
+    def Login(self):
+        self.tela_login = Tk()
+        self.tela_login.title("Login")
+        self.tela_login.configure(background='#2A2A2A')
+        self.tela_login.geometry("700x300")
+        self.tela_login.minsize(width=700,height=300)
+        self.tela_login.maxsize(width=700,height=300)
+        self.frames_login()
+        self.root.destroy()
+        self.tela_login.mainloop()
+                  
     def Iniciar(self):
         #Configurando a  tela da home e chamando a função frames
         
@@ -145,10 +155,12 @@ class App(Funcs):
                              highlightbackground='black',highlightthickness=2)
         self.frame_22.place(relx = 0.02 , rely = 0.5,relwidth = 0.96, relheight = 0.46)
         
-        
+    def frames_login(self):
+        self.frame_l = Frame(self.tela_login,bd=4,bg='#3E3E3E',
+                             highlightbackground='black',highlightthickness=2)
+        self.frame_l.place(relx = 0.39 , rely = 0.02,relwidth = 0.6, relheight = 0.95)
     def frames_home(self):
         
-           
         self.frame_1 = Frame(self.root,bd=4,bg='#3E3E3E',
                              highlightbackground='black',highlightthickness=2)
         self.frame_1.place(relx = 0.02 , rely = 0.02,relwidth = 0.6, relheight = 0.95)
