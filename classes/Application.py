@@ -94,13 +94,7 @@ class Funcs():
 class App(Funcs):
     
     
-    def __init__(self):
-        self.root = Tk()
-        self.root.configure(background='#2A2A2A')
-        self.root.geometry("700x500")
-        self.root.resizable(True,True)
-        self.root.minsize(width=600,height=600)
-        
+    
         
     #tela de inicial de login    
     def Login(self):
@@ -111,13 +105,18 @@ class App(Funcs):
         self.tela_login.minsize(width=700,height=300)
         self.tela_login.maxsize(width=700,height=300)
         self.frames_login()
-        self.root.destroy()
+        self.widgets_frame_login()
         self.tela_login.mainloop()
+       
         
     #Tela Home             
     def Iniciar(self):
         
-        
+        self.root = Tk()
+        self.root.configure(background='#2A2A2A')
+        self.root.geometry("700x500")
+        self.root.resizable(True,True)
+        self.root.minsize(width=600,height=600)
         self.root.title("System Car")
         self.frames_home()
         
@@ -274,6 +273,29 @@ class App(Funcs):
         self.tabela.config(background="#3E3E3E",border=0,foreground="white")
         self.tabela.pack()
     
+    def widgets_frame_login(self):
+        #Inputs de Login e Senha
+        self.login_input = Entry(self.frame_l)
+        self.login_input.place(relx=0.3, rely=0.20,relwidth=0.5,relheight=0.09)
+        self.senha_input = Entry(self.frame_l)
+        self.senha_input.place(relx=0.3, rely=0.35,relwidth=0.5,relheight=0.09)
+        
+        #Labels de Login e Senha
+        self.lb_login = Label(self.frame_l,text="Login:",bg='#3E3E3E',foreground='white')
+        self.lb_login.place(relx = 0.15 ,rely = 0.20)
+        self.lb_senha = Label(self.frame_l,text="Senha:",bg='#3E3E3E',foreground='white')
+        self.lb_senha.place(relx = 0.15 ,rely = 0.35)
+        
+        #Botão para login
+        
+        self.bt_login = Button(self.frame_l,text="Entrar",command=self.Iniciar)
+        self.bt_login.place(relx=0.40,rely=0.60,relwidth=0.25,relheight=0.08)
+        
+        #Nome do Sistema
+        
+        self.name_sytstem = Label(self.tela_login,text="System Car",bg='#2A2A2A',foreground='white',font=("Arial",25))
+        self.name_sytstem.place(relx=0.05,rely=0.35)
+        
         
         
         
