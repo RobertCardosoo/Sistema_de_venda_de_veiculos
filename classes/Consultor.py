@@ -1,4 +1,4 @@
-from classes.pessoa import Pessoa
+from classes.Pessoa import Pessoa
 import random
 
 class Consultor(Pessoa):
