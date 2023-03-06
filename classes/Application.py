@@ -278,6 +278,7 @@ class App(Funcs):
         self.login_input = Entry(self.frame_l)
         self.login_input.place(relx=0.3, rely=0.20,relwidth=0.5,relheight=0.09)
         self.senha_input = Entry(self.frame_l)
+        self.senha_input.config(show="*")
         self.senha_input.place(relx=0.3, rely=0.35,relwidth=0.5,relheight=0.09)
         
         #Labels de Login e Senha
