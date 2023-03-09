@@ -331,7 +331,7 @@ class App(Funcs):
         
         self.info_nome_usuario = Label(self.frame_2,foreground='white',text=f"Usuário:{self.currentuser.getNome()}",bg="#3E3E3E",font=("Arial",12))
         self.info_nome_usuario.place(relx=0.05, rely=0.05)
-        self.info_mat_usuario = Label(self.frame_2,foreground='white',text=f"Usuário:{self.currentuser.getMat()}",bg="#3E3E3E",font=("Arial",12))
+        self.info_mat_usuario = Label(self.frame_2,foreground='white',text=f"Matrícula:{self.currentuser.getMat()}",bg="#3E3E3E",font=("Arial",12))
         self.info_mat_usuario.place(relx=0.05, rely=0.1)
     
     def widgets_frame_login(self):
