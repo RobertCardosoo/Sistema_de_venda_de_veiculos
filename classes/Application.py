@@ -10,7 +10,7 @@ class Funcs():
 
     def monta_tabela(self):
         self.conecta_bd
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(14) not null, data_nascimento date, genero varchar(10) not null);')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(14) not null, data_nascimento date, genero varchar(10) not null, senha_consultor varchar(10) not null);')
         self.conn.commit()
         self.desconectar
         
