@@ -1,13 +1,23 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-#from tkcalendar import Calendar
+from classes.Consultor import Consultor
 import mysql.connector
 
 
 class Funcs():
 #Funções de Banco de Dados
-
+    #busca de usuários para login
+    def checkUser(self):
+        self.conecta_bd()
+        loginCPF = self.login_input.get()
+        loginPass = self.senha_login_input.get()
+        self.cursor.execute(f'SELECT id,nome,cpf,senha_consultor from consultores where cpf="{loginCPF}" and senha_consultor="{loginPass}";')
+        res = self.cursor.fetchall()
+        self.desconectar
+        
+        return res
+        
     def monta_tabela(self):
         self.conecta_bd
         self.cursor.execute('CREATE TABLE IF NOT EXISTS consultores(id int primary key auto_increment,nome varchar(60) not null,cpf char(14) not null, data_nascimento date, genero varchar(10) not null, senha_consultor varchar(10) not null);')
@@ -28,6 +38,7 @@ class Funcs():
         self.codigo_input.delete(0,END)
         self.nome_input.delete(0,END)
         self.cpf_input.delete(0,END)
+        self.senha_input.delete(0,END)
     
     def conecta_bd(self):
         
@@ -43,9 +54,11 @@ class Funcs():
         nomec = self.nome_input.get()
         cpfc = self.cpf_input.get()
         gen = self.cb.get()
+        password = self.senha_input.get()
+        
         check = self.checkCPF(cpfc)
         
-        if(nomec == "" or cpfc =="" or gen==""):
+        if(nomec == "" or cpfc =="" or gen=="" or password==""):
             
             messagebox.showwarning(title="Opa!", message="Não é possível criar usuário com campos vazios")
             
@@ -57,7 +70,7 @@ class Funcs():
             
             self.conecta_bd()
             
-            self.cursor.execute(f'INSERT INTO consultores (nome,cpf,genero) VALUES ("{nomec}","{cpfc}","{gen}")')
+            self.cursor.execute(f'INSERT INTO consultores (nome,cpf,genero,senha_consultor) VALUES ("{nomec}","{cpfc}","{gen}","{password}")')
             self.conn.commit()
             self.desconectar()
             self.limpa_tela()
@@ -91,6 +104,23 @@ class Funcs():
 
         self.cpf_input.delete(0, "end")
         self.cpf_input.insert(0, new_text)
+        
+    def format_cpf_login(self,event = None):
+    
+        text = self.login_input.get().replace(".", "").replace("-", "")[:11]
+        new_text = ""
+
+        if event.keysym.lower() == "backspace": return
+        
+        for index in range(len(text)):
+            
+            if not text[index] in "0123456789": continue
+            if index in [2, 5]: new_text += text[index] + "."
+            elif index == 8: new_text += text[index] + "-"
+            else: new_text += text[index]
+
+        self.login_input.delete(0, "end")
+        self.login_input.insert(0, new_text)
 class App(Funcs):
     
     
@@ -107,8 +137,30 @@ class App(Funcs):
         self.frames_login()
         self.widgets_frame_login()
         self.tela_login.mainloop()
-       
+    
+    #Função de verificação de login   
+    def fazerlogin(self):
+        #Recebendo lista com a busca de usuário
+        resp = self.checkUser()
+        conf = len(resp)
+        #Recebendo os valores dos inputs
+        login = self.login_input.get()
+        senha = self.senha_login_input.get()
         
+        #Mensagem de erro se os valores dos inputs de login forem nulos
+        if(login == "" or senha == ""):
+            messagebox.showwarning(title="Opa!", message="Por favor preencher os campos necessários!")
+        elif(conf != 0):
+        #Entrando no sistema se os dados de login forem inseridos corretamente   
+            self.tela_login.destroy()
+            self.currentuser = Consultor(resp[0][1],NONE,resp[0][2],NONE,resp[0][0])
+            messagebox.showinfo(title="Seja Bem vindo", message=f'Bem vindo ao System car {self.currentuser.getNome()}') 
+            self.Iniciar()
+        #Se não for encontrado usuário
+        elif(conf == 0):
+             messagebox.showwarning(title="Opa!", message="Usuário não encontrado")
+             
+            
     #Tela Home             
     def Iniciar(self):
         
@@ -237,7 +289,11 @@ class App(Funcs):
         self.cb.set("Masculino")
         self.cb.pack()
         
-        #Criando datepicker
+        #Criando input para senha
+        self.lb_senha = Label(self.frame_11,text="Senha:",bg='#3E3E3E',foreground='white')
+        self.lb_senha.place(relx=0.01, rely=0.56)
+        self.senha_input = Entry(self.frame_11,show="*")
+        self.senha_input.place(relx=0.01, rely=0.65,relwidth=0.3,relheight=0.09)
     
         
     
@@ -272,14 +328,20 @@ class App(Funcs):
         self.tabela.insert(2,"Python2")
         self.tabela.config(background="#3E3E3E",border=0,foreground="white")
         self.tabela.pack()
+        
+        self.info_nome_usuario = Label(self.frame_2,foreground='white',text=f"Usuário:{self.currentuser.getNome()}",bg="#3E3E3E",font=("Arial",12))
+        self.info_nome_usuario.place(relx=0.05, rely=0.05)
+        self.info_mat_usuario = Label(self.frame_2,foreground='white',text=f"Usuário:{self.currentuser.getMat()}",bg="#3E3E3E",font=("Arial",12))
+        self.info_mat_usuario.place(relx=0.05, rely=0.1)
     
     def widgets_frame_login(self):
         #Inputs de Login e Senha
         self.login_input = Entry(self.frame_l)
         self.login_input.place(relx=0.3, rely=0.20,relwidth=0.5,relheight=0.09)
-        self.senha_input = Entry(self.frame_l)
-        self.senha_input.config(show="*")
-        self.senha_input.place(relx=0.3, rely=0.35,relwidth=0.5,relheight=0.09)
+        self.login_input.bind("<KeyRelease>",self.format_cpf_login)
+        self.senha_login_input = Entry(self.frame_l)
+        self.senha_login_input.config(show="*")
+        self.senha_login_input.place(relx=0.3, rely=0.35,relwidth=0.5,relheight=0.09)
         
         #Labels de Login e Senha
         self.lb_login = Label(self.frame_l,text="Login:",bg='#3E3E3E',foreground='white')
@@ -289,7 +351,7 @@ class App(Funcs):
         
         #Botão para login
         
-        self.bt_login = Button(self.frame_l,text="Entrar",command=self.Iniciar)
+        self.bt_login = Button(self.frame_l,text="Entrar",command=self.fazerlogin)
         self.bt_login.place(relx=0.40,rely=0.60,relwidth=0.25,relheight=0.08)
         
         #Nome do Sistema
