@@ -10,7 +10,7 @@ class Fipe():
         self.lista = []
         count = 0
         
-        for i in marcas:
+        for i in request:
             self.lista.append(request[count]['nome'])
             count+=1
 
