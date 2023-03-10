@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from classes.Consultor import Consultor
+from classes.Fipe_Dados import Fipe
 import mysql.connector
 
 
@@ -153,8 +154,7 @@ class App(Funcs):
         elif(conf != 0):
         #Entrando no sistema se os dados de login forem inseridos corretamente   
             self.tela_login.destroy()
-            self.currentuser = Consultor(resp[0][1],NONE,resp[0][2],NONE,resp[0][0])
-            messagebox.showinfo(title="Seja Bem vindo", message=f'Bem vindo ao System car {self.currentuser.getNome()}') 
+            self.currentuser = Consultor(resp[0][1],NONE,resp[0][2],NONE,resp[0][0]) 
             self.Iniciar()
         #Se não for encontrado usuário
         elif(conf == 0):
@@ -229,10 +229,13 @@ class App(Funcs):
         self.frame_1.destroy()
         self.frame_2.destroy()
     #Função que fecha a tela de Cadastro
-    def home(self):
+    def fechar_cadastro(self):
         self.frame_11.destroy()
         self.frame_22.destroy()
-        self.Iniciar()
+    def home(self):
+        self.fechar_cadastro()
+        self.frames_home()
+        self.widgets_frame1_home()
         
         
     #Elementos do primeiro frame Cadastro
@@ -321,11 +324,14 @@ class App(Funcs):
         
         
     def widgets_frame1_home(self):
-        
+        self.consult_fipe = Fipe()
+        lista_m_carros = self.consult_fipe.buscar_marca_carros()
+        count = 1
         self.tabela = Listbox(self.frame_1)    
         self.tabela.configure(width=1024,height=768)
-        self.tabela.insert(1,"Python")
-        self.tabela.insert(2,"Python2")
+        for i in lista_m_carros:
+            self.tabela.insert(count,i)
+            count+=1
         self.tabela.config(background="#3E3E3E",border=0,foreground="white")
         self.tabela.pack()
         
