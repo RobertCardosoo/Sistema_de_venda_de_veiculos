@@ -325,13 +325,15 @@ class App(Funcs):
         
     def widgets_frame1_home(self):
         self.consult_fipe = Fipe()
-        lista_m_carros = self.consult_fipe.buscar_marca_carros()
+        lista_m_carros = self.consult_fipe.buscar_modelos_carros(codigo=59)
         count = 1
         self.tabela = Listbox(self.frame_1)    
         self.tabela.configure(width=1024,height=768)
+        
         for i in lista_m_carros:
-            self.tabela.insert(count,i)
+            self.tabela.insert(count,i['nome'])
             count+=1
+            
         self.tabela.config(background="#3E3E3E",border=0,foreground="white")
         self.tabela.pack()
         
