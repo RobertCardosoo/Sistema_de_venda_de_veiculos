@@ -50,16 +50,20 @@ class Funcs():
     def desconectar(self):
         
         self.conn.close(); print("Desconectando ao Banco de Dados")    
-         
+    
+    def variaveis(self):
+        self.codigoc = self.codigo_input.get()
+        self.nomec = self.nome_input.get()
+        self.cpfc = self.cpf_input.get()
+        self.gen = self.cb.get()
+        self.password = self.senha_input.get()    
+    
     def criar_usuario(self):
-        nomec = self.nome_input.get()
-        cpfc = self.cpf_input.get()
-        gen = self.cb.get()
-        password = self.senha_input.get()
+        self.variaveis()
         
-        check = self.checkCPF(cpfc)
+        check = self.checkCPF(self.cpfc)
         
-        if(nomec == "" or cpfc =="" or gen=="" or password==""):
+        if(self.nomec == "" or self.cpfc =="" or self.gen=="" or self.password==""):
             
             messagebox.showwarning(title="Opa!", message="Não é possível criar usuário com campos vazios")
             
@@ -67,11 +71,11 @@ class Funcs():
             
             messagebox.showwarning(title="Opa!", message="CPF já cadastrado")
             
-        elif(check == 0 and cpfc!=""):
+        elif(check == 0 and self.cpfc!=""):
             
             self.conecta_bd()
             
-            self.cursor.execute(f'INSERT INTO consultores (nome,cpf,genero,senha_consultor) VALUES ("{nomec}","{cpfc}","{gen}","{password}")')
+            self.cursor.execute(f'INSERT INTO consultores (nome,cpf,genero,senha_consultor) VALUES ("{self.nomec}","{self.cpfc}","{self.gen}","{self.password}")')
             self.conn.commit()
             self.desconectar()
             self.limpa_tela()
@@ -122,6 +126,41 @@ class Funcs():
 
         self.login_input.delete(0, "end")
         self.login_input.insert(0, new_text)
+        
+    def onDoubleClick(self, event = True):
+        self.limpa_tela()
+        self.lista_usu.selection()
+        
+        for i in self.lista_usu.selection():
+            col1,col2,col3,col4,col5 = self.lista_usu.item(i,'values')
+            self.codigo_input.insert(END,col1)
+            self.nome_input.insert(END,col2)
+            self.cpf_input.insert(END,col3)
+            self.cb.set(col5)
+            
+    def deleta_usu(self):
+        self.variaveis()
+        
+        self.conecta_bd()
+        
+        self.cursor.execute(f'DELETE FROM consultores where id = {self.codigoc}')
+        self.conn.commit()
+        
+        self.desconectar()
+        self.limpa_tela()
+        self.select_lista()
+    
+    def altera_usu(self):
+        self.variaveis()
+        if(self.nomec == "" or self.gen == "" or self.cpfc == ""):
+            messagebox.showwarning(title="Não foi possível alterar os dados atuais",message="Você está tentando inserir dados nulos")   
+            
+        elif(self.nomec != "" and self.cpfc != ""):
+            self.conecta_bd()
+            self.cursor.execute(f'UPDATE consultores set nome = "{self.nomec}", cpf = "{self.cpfc}", genero = "{self.gen}" WHERE id = {self.codigoc} ;')
+            self.conn.commit()
+            self.desconectar()
+            self.select_lista()
 class App(Funcs):
     
     
@@ -251,10 +290,10 @@ class App(Funcs):
         self.btnovo = Button(self.frame_11,text="Novo",command=self.criar_usuario)
         self.btnovo.place(relx = 0.62,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Alterar
-        self.btalterar = Button(self.frame_11,text="Alterar")
+        self.btalterar = Button(self.frame_11,text="Alterar",command=self.altera_usu)
         self.btalterar.place(relx = 0.73,rely=0.15,relwidth=0.1,relheight=0.1)
         #Criando botão Apagar
-        self.btexcluir = Button(self.frame_11,text="Excluir")
+        self.btexcluir = Button(self.frame_11,text="Excluir",command=self.deleta_usu)
         self.btexcluir.place(relx = 0.84,rely=0.15,relwidth=0.1,relheight=0.1)
         
         #Criando label e input do codigo
@@ -321,6 +360,8 @@ class App(Funcs):
         self.scroll_Lista = Scrollbar(self.frame_22, orient='vertical')
         self.lista_usu.configure(yscroll=self.scroll_Lista.set)
         self.scroll_Lista.place(relx=0.96,rely=0.01,relwidth=0.02, relheight=0.99)
+        
+        self.lista_usu.bind("<Double-1>",self.onDoubleClick)
         
         
     def widgets_frame1_home(self):
