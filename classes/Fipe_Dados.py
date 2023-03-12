@@ -44,7 +44,7 @@ class Fipe():
             self.lista_anos_modelo.append(i)   
         return self.lista_anos_modelo
     
-    def buscar_veículo(self,tipo_veiculo,codigo_marca,codigo_modelo,codigo_ano_combustivel):
+    def buscar_veiculo(self,tipo_veiculo,codigo_marca,codigo_modelo,codigo_ano_combustivel):
         
         request = requests.get(f"https://parallelum.com.br/fipe/api/v1/{tipo_veiculo}/marcas/{codigo_marca}/modelos/{codigo_modelo}/anos/{codigo_ano_combustivel}").json()
         
