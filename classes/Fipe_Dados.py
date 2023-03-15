@@ -44,14 +44,7 @@ class Fipe():
     
         return request
     
-from Fipe_Dados import Fipe
-    
-teste = Fipe()
-    
-listar_motos = teste.buscar_modelos_motos(80)
-    
-print(listar_motos['modelos'][0]['nome'])  
-        
+
         
     
     
