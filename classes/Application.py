@@ -219,13 +219,14 @@ class App(Funcs):
         self.fileMenu = Menu(self.menu)
         self.menu.add_command(label="Home", command=self.home)
         self.menu.add_cascade(label="Cadastro",menu=self.fileMenu)
-        self.fileMenu.add_command(label="Usuários", command=self.Cadastro)
+        self.fileMenu.add_command(label="Usuários", command=self.Cadastro_Usuario)
+        self.fileMenu.add_command(Label="Veículos")
         self.widgets_frame1_home()
         
         
         self.root.mainloop()
         
-    def Cadastro(self):
+    def Cadastro_Usuario(self):
         #Tela de Cadastro de Consultores
         self.root.title("Cadastro")
         self.fechar_home()
@@ -233,7 +234,7 @@ class App(Funcs):
         self.widgets_frame1_cadastro()
         self.widgets_frame2_cadastro()
         self.select_lista()
-        self.root.mainloop()
+        
         
         
     #Frames da Tela de Cadastro    
